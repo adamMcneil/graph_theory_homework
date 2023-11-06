@@ -1,0 +1,33 @@
+digraph maze {
+node [shape=circle]
+edge [arrowhead=none]
+start -> i1
+i1 -> d1
+i1 -> i2
+i2 -> i3
+i2 -> i4
+i3 -> i5
+i3 -> i6
+i4 -> i7
+i4 -> i8
+i5 -> d2
+i6 -> i11
+i6 -> i13
+i7 -> i9
+i7 -> i11
+i8 -> d3
+i9 -> i10
+i10 -> d4
+i11 -> i12
+i12 -> i17
+i12 -> i18
+i13 -> i14
+i14 -> i15
+i14 -> i16
+i15 -> d5
+i16 -> d6
+i16 -> i17
+i17 -> d7
+i18 -> d8
+i18 -> finish
+}
