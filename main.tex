@@ -227,7 +227,80 @@ Join order: a-b, b-i, i-h, h-e, e-f, c-f, c-d, f-g\\
 }\\
 A DFS would be better in this case because we are not looking for the shortest path but only a
 path. The DFS would return the first path that it found even if it was not the shortest path, 
-but the BFS would be guaranteed to find the shortest path.
+but the BFS would be guaranteed to find the shortest path. \\
+
+Bonus:\\
+A bipartite graph cannot have a cycle with an odd number of edges.
+This is equivalent to saying the nodes of the graph can be colored with two colors with no connected nodes being colored the same color. 
+The following graph is a bipartite graph.
+\digraph[scale=0.5]{bonuspartone}{
+    node [shape=circle]
+    edge [arrowhead=none]
+    1[color=red]
+    2[color=blue]
+    3[color=blue]
+
+    4[color=red]
+    5[color=red]
+    6[color=red]
+    7[color=red]
+    8[color=blue]
+    9[color=blue]
+    10[color=blue]
+    11[color=red]
+    1 -> 2
+    1 -> 3
+    2 -> 4
+    2 -> 5
+    3 -> 6
+    3 -> 7
+    4 -> 8
+    5 -> 8
+    6 -> 8
+    7 -> 8
+    7 -> 10
+    7 -> 9
+    9 -> 11
+    }\\
+
+\digraph[scale=0.5]{bonusparttwo}{
+    node [shape=circle]
+    edge [arrowhead=none]
+    subgraph cluster_1 {
+    
+    1[color=red]
+    4[color=red]
+    5[color=red]
+    6[color=red]
+    7[color=red]
+    11[color=red]
+    }
+    subgraph cluster_2 {
+    2[color=blue]
+    3[color=blue]
+
+
+    8[color=blue]
+    9[color=blue]
+    10[color=blue]
+    }
+    1 -> 2
+    1 -> 3
+    2 -> 4
+    2 -> 5
+    3 -> 6
+    3 -> 7
+    4 -> 8
+    5 -> 8
+    6 -> 8
+    7 -> 8
+    7 -> 10
+    7 -> 9
+    9 -> 11
+    }\\
+
+Bonus 2: \\
+Finding the square of a digraph is equivalent to squaring the adjacency matrix as a mathimatical matrix. 
 
 
 \end{document}

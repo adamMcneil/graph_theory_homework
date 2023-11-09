@@ -1,0 +1,35 @@
+digraph bonusparttwo {
+node [shape=circle]
+edge [arrowhead=none]
+subgraph cluster_1 {
+rankdir = RL
+1[color=red]
+4[color=red]
+5[color=red]
+6[color=red]
+7[color=red]
+11[color=red]
+}
+subgraph cluster_2 {
+2[color=blue]
+3[color=blue]
+
+
+8[color=blue]
+9[color=blue]
+10[color=blue]
+}
+1 -> 2
+1 -> 3
+2 -> 4
+2 -> 5
+3 -> 6
+3 -> 7
+4 -> 8
+5 -> 8
+6 -> 8
+7 -> 8
+7 -> 10
+7 -> 9
+9 -> 11
+}
