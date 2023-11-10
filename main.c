@@ -147,9 +147,27 @@ struct ConnectedComponentsData findConnectedComponents(struct Digraph* graph) {
 
 }
 
-struct DijkstaReturn {
-    //
+struct DijkstraReturn {
+    int source;
+    int numberOfNodes;
+    int* distance;
+    int* predecessor;
 };
+
+struct DijkstraReturn* dijkstraReturnBuilder(int source, int numberOfNodes, int* distance, int* predecessor) {
+    struct DijkstraReturn* newData = (struct DijkstraReturn*)malloc(sizeof(struct DijkstraReturn));
+    newData->source = source;
+    newData->numberOfNodes = numberOfNodes;
+    newData->distance = distance;
+    newData->predecessor = predecessor;
+    return newData;
+}
+
+void printDijkstra(struct DijkstraReturn* data) {
+    for (int i = 0; i < data->numberOfNodes; i++) {
+        
+    }
+}
 
 int getMinimumEdge(struct Digraph* digraph, int node) {
     int minimum = INFINITY;
@@ -167,7 +185,10 @@ int getMinimumEdge(struct Digraph* digraph, int node) {
 int getClosestNode(int* array, int n) {
     int minimumNode = -1;
     int shortestDistance = INFINITY;
-    for (int i = 0; i < n && array[i] != -1; i++) {
+    for (int i = 0; i < n; i++) {
+        if (array[i] == -1) {
+            continue;
+        }
         if (array[i] < shortestDistance) {
             minimumNode = i;
             shortestDistance = array[i];
@@ -176,7 +197,7 @@ int getClosestNode(int* array, int n) {
     return minimumNode;
 }
 
-void dijkstraArray(struct Digraph* inputDigraph) {
+struct DijkstraReturn* dijkstraArray(struct Digraph* inputDigraph) {
     struct Digraph* digraph = digraphCopier(inputDigraph);
     int* distance = malloc(sizeof(int) * digraph->numberOfNodes);
     int* previous = malloc(sizeof(int) * digraph->numberOfNodes);
@@ -184,23 +205,32 @@ void dijkstraArray(struct Digraph* inputDigraph) {
     for (int i = 0; i < digraph->numberOfNodes; i++) {
         distance[i] = INFINITY;
         previous[i] = -1;
-        nodesToVisit[i] = i;
+        nodesToVisit[i] = INFINITY;
     } 
     distance[0] = 0;
+    nodesToVisit[0] = 0;
 
     int closestNode = getClosestNode(nodesToVisit, digraph->numberOfNodes);
-    nodesToVisit[closestNode] = -1;
+    nodesToVisit[0] = -1;
     while (closestNode != -1) {
-        for (int i = 0; i < digraph->numberOfNodes && digraph->graph[closestNode][i] != 0; i++) {
+        for (int i = 0; i < digraph->numberOfNodes; i++) {
+            if (digraph->graph[closestNode][i] == 0) {
+                continue;
+            }
             int newPathDistance = distance[closestNode] + digraph->graph[closestNode][i];
             if (newPathDistance < distance[i]) {
-                distance[closestNode] = newPathDistance;
-                previous[closestNode] = i;
+                distance[i] = newPathDistance;
+                nodesToVisit[i] = newPathDistance;
+                previous[i] = closestNode;
             }
         }
         closestNode = getClosestNode(nodesToVisit, digraph->numberOfNodes);
-        nodesToVisit[closestNode] = -1;
+        if (closestNode != -1) {
+            nodesToVisit[closestNode] = -1;
+        }
     }
+    struct DijkstraReturn* returnData = dijkstraReturnBuilder(0, digraph->numberOfNodes, distance, previous);
+    return returnData;
 }
 
 
@@ -213,5 +243,9 @@ int main(int argc, char* argv[]) {
     struct DepthData* data = depthSearch(digraph);
     print(data);
 
+    int* distance = dijkstraArray(digraph);
+    for (int i = 0; i < 4; i++) {
+        printf("%d ", distance[i]);
+    }
     return 0;
 }
