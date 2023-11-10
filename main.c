@@ -5,10 +5,11 @@
 #include <unistd.h>     // for sleep()
 #include <string.h>
 
-int static WHITE = 0;
-int static GRAY = 1;
-int static BLACK = 2;
-int time = 0;
+int WHITE = 0;
+int GRAY = 1;
+int BLACK = 2;
+int TIME = 0;
+int NO_PREDECESSOR = -1;
 
 struct Edge {
     int source;
@@ -18,7 +19,7 @@ struct Edge {
 
 struct ConnectedComponentsData {
   int numberOfComponents;
-  int componentArray[][];
+//  int componentArray[][];
 };
 
 struct Digraph {
@@ -27,47 +28,72 @@ struct Digraph {
     int** graph;
 };
 
+void printDigraph(struct Digraph* digraph) {
+    printf("number of nodes: %d\n", digraph->numberOfNodes);
+    printf("number of edges: %d\n", digraph->numberOfEdges);
+    for (int i = 0; i < digraph->numberOfNodes; i++)
+    {
+        for (int j = 0; j < digraph->numberOfNodes; j++)
+        {
+            printf("%d ", digraph->graph[i][j]);
+        }
+        printf("\n");
+    }
+    
+}
+
 struct Digraph* digraphBuilder(int numberOfNodes, int numberOfEdges) {
     struct Digraph* digraph = (struct Digraph*)malloc(sizeof(struct Digraph));
     digraph->numberOfNodes = numberOfNodes;
     digraph->numberOfEdges = numberOfEdges;
-    digraph->graph = malloc(sizeof(int) * numberOfNodes * numberOfNodes);
+    digraph->graph = (int**) malloc(numberOfNodes * sizeof(int*));
+    for (int i = 0; i < numberOfNodes; i++) {
+        digraph->graph[i] = (int*) malloc(sizeof(int) * numberOfNodes);
+    }
+    
     return digraph;
 }
 
+struct Digraph* digraphCopier(struct Digraph* digraph) {
+    struct Digraph* newDigraph = (struct Digraph*)malloc(sizeof(struct Digraph));
+    newDigraph->numberOfNodes = digraph->numberOfNodes;
+    newDigraph->numberOfEdges = digraph->numberOfEdges;
+    newDigraph->graph = (int**) malloc(digraph->numberOfNodes * sizeof(int*));
+    for (int i = 0; i < digraph->numberOfNodes; i++) {
+        newDigraph->graph[i] = (int*) malloc(sizeof(int) * digraph->numberOfNodes);
+    }
+    for (int i = 0; i < digraph->numberOfNodes; i++) {
+        for (int j = 0; j < digraph->numberOfNodes; j++) {
+            newDigraph->graph[i][j] = digraph->graph[i][j];
+        }
+    }
+    return newDigraph; 
+}
+
 struct DepthData {
+    int numberOfNodes;
     int* discoveryTime;
     int* finishTime;
     int* predecessors;
 };
 
+void print(struct DepthData* data) {
+    for (int i = 0; i < data->numberOfNodes; i++) {
+        printf("%d / %d / %d\n", data->discoveryTime[i], data->finishTime[i], data->predecessors[i]);
+    }
+}
+
 struct DepthData* depthDataBuilder(int numberOfNodes) {
     struct DepthData* depthData = (struct DepthData*)malloc(sizeof(struct DepthData));
     depthData->discoveryTime = malloc(sizeof(int) * numberOfNodes);
     depthData->finishTime = malloc(sizeof(int) * numberOfNodes);
-
-}
-
-struct DepthData* depthSearch(struct Digraph* digraph) {
-    int* colorArray[digraph->numberOfNodes];
-    struct DepthData* depthData = depthDataBuilder(digraph->numberOfNodes);
-    for (int i = 0; i < digraph->numberOfNodes; i++) {
-        colorArray[i] = WHITE;
-        depthData->predecessors[i] = NULL;
-    }
-
-    time = 0;
-    for (int i = 0; i < digraph->numberOfNodes; i++) {
-        if (colorArray[i] == WHITE) {
-            depthSearchVisit(digraph, i, depthData, colorArray);    
-        }
-    }
-    return depthData;
+    depthData->predecessors = malloc(sizeof(int) * numberOfNodes);
+    depthData->numberOfNodes = numberOfNodes;
 }
 
 void depthSearchVisit(struct Digraph* digraph, int i, struct DepthData* depthData, int* colorArray) {
-    time++;
-    depthData->discoveryTime[i] = time;
+    TIME++;
+    depthData->discoveryTime[i] = TIME;
     colorArray[i] = GRAY;
     for (int j = 0; j < digraph->numberOfNodes; j++) {
         if (digraph->graph[i][j] != 0 && colorArray[j] == WHITE) {
@@ -76,9 +102,27 @@ void depthSearchVisit(struct Digraph* digraph, int i, struct DepthData* depthDat
         } 
     }
     colorArray[i] = BLACK;
-    time++;
-    depthData->finishTime[i] = time;
+    TIME++;
+    depthData->finishTime[i] = TIME;
 }
+
+struct DepthData* depthSearch(struct Digraph* digraph) {
+    int* colorArray = malloc(sizeof(int) * digraph->numberOfNodes);
+    struct DepthData* depthData = depthDataBuilder(digraph->numberOfNodes);
+    for (int i = 0; i < digraph->numberOfNodes; i++) {
+        colorArray[i] = WHITE;
+        depthData->predecessors[i] = NO_PREDECESSOR;
+    }
+
+    TIME = 0;
+    for (int i = 0; i < digraph->numberOfNodes; i++) {
+        if (colorArray[i] == WHITE) {
+            depthSearchVisit(digraph, i, depthData, colorArray);    
+        }
+    }
+    return depthData;
+}
+
 
 struct Digraph* readInputFile(char* fileName) {
     int numberOfNodes;
@@ -86,12 +130,14 @@ struct Digraph* readInputFile(char* fileName) {
     
     FILE *file;
     file = fopen(fileName, "r");
-    fscanf(file, "(%d, %d)", numberOfNodes, numberOfEdges);
+    fscanf(file, "(%d, %d)", &numberOfNodes, &numberOfEdges);
     struct Digraph* digraph = digraphBuilder(numberOfNodes, numberOfEdges);
     for (int i = 0; i < numberOfNodes; i++) {
         for (int  j = 0; j < numberOfNodes; j++) {
-            fscanf(file, "%d", digraph->graph[i][j]);
-        }
+            int x;
+            fscanf(file, "%d", &x);
+            digraph->graph[i][j] = x;    
+      }
     }
     return digraph;
 }
@@ -101,45 +147,71 @@ struct ConnectedComponentsData findConnectedComponents(struct Digraph* graph) {
 
 }
 
-// void dijkstraArray(struct Digraph* digraph) {
-//     int* 
-// }
+struct DijkstaReturn {
+    //
+};
+
+int getMinimumEdge(struct Digraph* digraph, int node) {
+    int minimum = INFINITY;
+    int minimumNode = -1;
+    for (int i = 0; i < digraph->numberOfNodes; i++) {
+        int edgeValue = digraph->graph[node][i];
+        if (edgeValue < minimum && edgeValue != 0) {
+            minimum = edgeValue;
+            minimumNode = i;
+        } 
+    }
+    return minimum;
+}
+
+int getClosestNode(int* array, int n) {
+    int minimumNode = -1;
+    int shortestDistance = INFINITY;
+    for (int i = 0; i < n && array[i] != -1; i++) {
+        if (array[i] < shortestDistance) {
+            minimumNode = i;
+            shortestDistance = array[i];
+        }
+    }
+    return minimumNode;
+}
+
+void dijkstraArray(struct Digraph* inputDigraph) {
+    struct Digraph* digraph = digraphCopier(inputDigraph);
+    int* distance = malloc(sizeof(int) * digraph->numberOfNodes);
+    int* previous = malloc(sizeof(int) * digraph->numberOfNodes);
+    int* nodesToVisit = malloc(sizeof(int) * digraph->numberOfNodes);
+    for (int i = 0; i < digraph->numberOfNodes; i++) {
+        distance[i] = INFINITY;
+        previous[i] = -1;
+        nodesToVisit[i] = i;
+    } 
+    distance[0] = 0;
+
+    int closestNode = getClosestNode(nodesToVisit, digraph->numberOfNodes);
+    nodesToVisit[closestNode] = -1;
+    while (closestNode != -1) {
+        for (int i = 0; i < digraph->numberOfNodes && digraph->graph[closestNode][i] != 0; i++) {
+            int newPathDistance = distance[closestNode] + digraph->graph[closestNode][i];
+            if (newPathDistance < distance[i]) {
+                distance[closestNode] = newPathDistance;
+                previous[closestNode] = i;
+            }
+        }
+        closestNode = getClosestNode(nodesToVisit, digraph->numberOfNodes);
+        nodesToVisit[closestNode] = -1;
+    }
+}
 
 
 
-int main(char *argc, char* argv[]) {
-
-    char x[99];
-    char y[99];
-
+int main(int argc, char* argv[]) {
     char* file_name = argv[1];
-    // printf("%lu\n", sizeof(file_name)/sizeof(char));
-    for (int i = 0; i < sizeof(file_name)/sizeof(char); i++) {
-        // printf("%c", file_name[i]);
-    }
-    // printf("\n");
-
-    fscanf(file, "%s", x);
-    int x_length = strlen(x);
-    // printf("%u\n", x_length);
-    fscanf(file, "%s", y);
-    int y_length = strlen(y);
-    // printf("%u\n", y_length);
-
-    // fclose(file);
-
-
-    FILE *fp;
-    fp = fopen(argv[2], "w+");
-
-
-    char* answer = longest_common_subsequence(y, y_length, x, x_length);
-    int answer_length = strlen(answer);
-    fprintf(fp, "%u\n", answer_length);
-    for (int i = 0; i < answer_length; i++)
-    {
-        fprintf(fp, "%c", answer[i]);
-    }
     
+    struct Digraph* digraph = readInputFile(file_name);
+    printDigraph(digraph);
+    struct DepthData* data = depthSearch(digraph);
+    print(data);
+
     return 0;
 }
