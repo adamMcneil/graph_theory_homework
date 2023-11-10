@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2023.9.28)  9 NOV 2023 11:20
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2023.9.28)  10 NOV 2023 15:35
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -386,26 +386,55 @@ Underfull \hbox (badness 10000) in paragraph at lines 266--301
 
  []
 
+! Missing $ inserted.
+<inserted text> 
+                $
+l.305 ... time of a matrix multiplication is O({n^
+                                                  3}), so that is how long i...
+
+? 
+! Extra }, or forgotten $.
+l.305 ...ime of a matrix multiplication is O({n^3}
+                                                  ), so that is how long it ...
+
+? 
+! Missing $ inserted.
+<inserted text> 
+                $
+l.306 
+      
+? 
+
+Overfull \hbox (120.03612pt too wide) in paragraph at lines 302--306
+\OT1/cmr/m/n/10 ti-pli-ca-tions. The run-ning time of a ma-trix mul-ti-pli-ca-t
+ion is O(n$[])\OML/cmm/m/it/10 ; sothatishowlongitlongtaketocalculateG[]:$ 
+ []
+
 [7 <./bonuspartone.pdf> <./bonusparttwo.pdf
 
 pdfTeX warning: pdflatex (file ./bonusparttwo.pdf): PDF inclusion: multiple pdf
 s with page group included in a single page
->] (./main.aux) ) 
+>] (./main.aux) )
+(\end occurred inside a group at level 1)
+
+### simple group (level 1) entered at line 305 ({)
+### bottom level 
 Here is how much of TeX's memory you used:
- 2673 strings out of 480247
- 44673 string characters out of 5896151
+ 2676 strings out of 480247
+ 44706 string characters out of 5896151
  327500 words of memory out of 5000000
- 20598 multiletter control sequences out of 15000+600000
- 469259 words of font info for 28 fonts, out of 8000000 for 9000
+ 20600 multiletter control sequences out of 15000+600000
+ 469713 words of font info for 30 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 70i,5n,76p,252b,111s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.
-pfb>
-Output written on main.pdf (7 pages, 95636 bytes).
+ 70i,5n,76p,252b,115s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr
+/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on main.pdf (7 pages, 116077 bytes).
 PDF statistics:
- 140 PDF objects out of 1000 (max. 8388607)
- 91 compressed objects within 1 object stream
+ 150 PDF objects out of 1000 (max. 8388607)
+ 97 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  56 words of extra memory for PDF output out of 10000 (max. 10000000)
 
