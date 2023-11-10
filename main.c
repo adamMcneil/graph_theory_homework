@@ -165,7 +165,23 @@ struct DijkstraReturn* dijkstraReturnBuilder(int source, int numberOfNodes, int*
 
 void printDijkstra(struct DijkstraReturn* data) {
     for (int i = 0; i < data->numberOfNodes; i++) {
-        
+        if (i == data->source) {
+            continue;
+        }
+        printf("(v%d, v%d): ", data->source+1, i+1);
+
+        int parentArray[data->numberOfNodes];
+        parentArray[0] = data->predecessor[i];
+        int length = 1;
+        while (parentArray[length-1] != data->source) {
+            parentArray[length] = data->predecessor[parentArray[length-1]];
+            length++;
+        }
+        for (int i = length - 1; i >= 0; i--) {
+            printf("v%d->", parentArray[i]+1);
+        }
+        printf("v%d, %d\n", i+1, data->distance[i]+1);
+ 
     }
 }
 
@@ -243,9 +259,14 @@ int main(int argc, char* argv[]) {
     struct DepthData* data = depthSearch(digraph);
     print(data);
 
-    int* distance = dijkstraArray(digraph);
-    for (int i = 0; i < 4; i++) {
-        printf("%d ", distance[i]);
-    }
+    printf("Dijkstra's algorithm:\n");
+    printf("- Array implementation\n");
+    double time_spent = 0.0;
+    clock_t begin = clock();
+    struct DijkstraReturn* Ddata = dijkstraArray(digraph);
+    clock_t end = clock();
+    time_spent += (double)(end - begin) / CLOCKS_PER_SEC; 
+    printf("Running time: %f\n", time_spent);
+    printDijkstra(Ddata);
     return 0;
 }
